@@ -46,15 +46,13 @@ import {
   truncateText,
 } from '../../utils';
 import { RankIcon } from './RankIcon';
+import { RowLink } from '../common';
 import { STATUS_COLORS, UI_COLORS, scrollbarSx } from '../../theme';
 import FilterButton from '../FilterButton';
 
 interface TopPRsTableProps {
   prs: CommitLog[];
   isLoading?: boolean;
-  onSelectPR: (repository: string, pullRequestNumber: number) => void;
-  onSelectMiner: (githubId: string) => void;
-  onSelectRepository: (repositoryFullName: string) => void;
 }
 
 const getPrStatusColor = (state: string) => {
@@ -64,13 +62,7 @@ const getPrStatusColor = (state: string) => {
   return STATUS_COLORS.neutral;
 };
 
-const TopPRsTable: React.FC<TopPRsTableProps> = ({
-  prs,
-  isLoading,
-  onSelectPR,
-  onSelectMiner,
-  onSelectRepository,
-}) => {
+const TopPRsTable: React.FC<TopPRsTableProps> = ({ prs, isLoading }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [showChart, setShowChart] = useState(false);
@@ -681,11 +673,10 @@ const TopPRsTable: React.FC<TopPRsTableProps> = ({
                 <TableRow
                   key={`${pr.repository}-${pr.pullRequestNumber}`}
                   hover
-                  onClick={() =>
-                    onSelectPR(pr.repository || '', pr.pullRequestNumber)
-                  }
+                  component={RowLink}
+                  href={`/miners/pr?repo=${encodeURIComponent(pr.repository || '')}&number=${pr.pullRequestNumber}`}
+                  state={{ backLabel: 'Back to Leaderboard' }}
                   sx={{
-                    cursor: 'pointer',
                     '&:hover': {
                       backgroundColor: 'surface.light',
                     },
@@ -718,16 +709,14 @@ const TopPRsTable: React.FC<TopPRsTableProps> = ({
                     </Tooltip>
                   </TableCell>
                   <TableCell sx={{ ...bodyCellStyle, width: '20%' }}>
-                    <Box
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectMiner(pr.githubId || pr.author || '');
-                      }}
+                    <RowLink
+                      href={`/miners/details?githubId=${encodeURIComponent(pr.githubId || pr.author || '')}`}
+                      state={{ backLabel: 'Back to Leaderboard' }}
+                      onClick={(e) => e.stopPropagation()}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: 1,
-                        cursor: 'pointer',
                         '&:hover': {
                           '& .MuiTypography-root': {
                             color: 'primary.main',
@@ -757,19 +746,17 @@ const TopPRsTable: React.FC<TopPRsTableProps> = ({
                           {truncateText(pr.author || '', 20)}
                         </Typography>
                       </Tooltip>
-                    </Box>
+                    </RowLink>
                   </TableCell>
                   <TableCell sx={{ ...bodyCellStyle, width: '20%' }}>
-                    <Box
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectRepository(pr.repository || '');
-                      }}
+                    <RowLink
+                      href={`/miners/repository?name=${encodeURIComponent(pr.repository || '')}`}
+                      state={{ backLabel: 'Back to Leaderboard' }}
+                      onClick={(e) => e.stopPropagation()}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: 1.5,
-                        cursor: 'pointer',
                         '&:hover': {
                           '& .MuiTypography-root': {
                             color: 'primary.main',
@@ -808,7 +795,7 @@ const TopPRsTable: React.FC<TopPRsTableProps> = ({
                           {truncateText(pr.repository || '', 30)}
                         </Typography>
                       </Tooltip>
-                    </Box>
+                    </RowLink>
                   </TableCell>
                   <TableCell sx={{ ...bodyCellStyle, width: '10%' }}>
                     {(() => {

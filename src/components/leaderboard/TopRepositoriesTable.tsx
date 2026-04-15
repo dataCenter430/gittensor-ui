@@ -39,6 +39,7 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import ReactECharts from 'echarts-for-react';
 import { useSearchParams } from 'react-router-dom';
 import { truncateText } from '../../utils';
+import { RowLink } from '../common';
 import { RankIcon } from './RankIcon';
 import {
   getRepositoryOwnerAvatarBackground,
@@ -731,9 +732,10 @@ const TopRepositoriesTable: React.FC<TopRepositoriesTableProps> = ({
                   <TableRow
                     key={repo.repository}
                     hover
-                    onClick={() => onSelectRepository(repo.repository || '')}
+                    component={RowLink}
+                    href={`/miners/repository?name=${encodeURIComponent(repo.repository || '')}`}
+                    state={{ backLabel: 'Back to Repositories' }}
                     sx={{
-                      cursor: 'pointer',
                       '&:hover': {
                         backgroundColor: 'border.subtle',
                       },
@@ -752,7 +754,6 @@ const TopRepositoriesTable: React.FC<TopRepositoriesTableProps> = ({
                           display: 'flex',
                           alignItems: 'center',
                           gap: 1,
-                          cursor: 'pointer',
                           '&:hover': {
                             '& .MuiTypography-root': {
                               color: 'primary.main',
