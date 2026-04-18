@@ -419,7 +419,7 @@ const NetworkTabs: React.FC<{
 );
 
 export const GettingStarted: React.FC = () => {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
   return (
     <Box sx={{ maxWidth: 1000, mx: 'auto', px: { xs: 2, md: 4 }, py: 4 }}>
@@ -482,12 +482,13 @@ export const GettingStarted: React.FC = () => {
                   width: 48,
                   height: 48,
                   borderRadius: '50%',
-                  bgcolor: (theme) =>
+                  bgcolor: 'background.default',
+                  backgroundImage: (theme) =>
                     activeStep === index
                       ? index === steps.length - 1
-                        ? alpha(theme.palette.secondary.main, 0.15)
-                        : alpha(theme.palette.primary.main, 0.15)
-                      : theme.palette.background.default,
+                        ? `linear-gradient(${alpha(theme.palette.secondary.main, 0.15)}, ${alpha(theme.palette.secondary.main, 0.15)})`
+                        : `linear-gradient(${alpha(theme.palette.primary.main, 0.15)}, ${alpha(theme.palette.primary.main, 0.15)})`
+                      : 'none',
                   border: '2px solid',
                   borderColor: item.active
                     ? 'secondary.main'
@@ -553,30 +554,32 @@ export const GettingStarted: React.FC = () => {
         </Stack>
       </Box>
 
-      <Box
-        sx={{
-          p: { xs: 3, md: 4 },
-          borderRadius: 3,
-          border: '1px solid',
-          borderColor: 'border.subtle',
-          background: 'surface.subtle',
-          mb: 6,
-          minHeight: 200,
-        }}
-      >
-        <Typography
+      {activeStep !== null && (
+        <Box
           sx={{
-            fontFamily: MONO,
-            fontWeight: 700,
-            fontSize: '1.1rem',
-            color: 'text.primary',
-            mb: 3,
+            p: { xs: 3, md: 4 },
+            borderRadius: 3,
+            border: '1px solid',
+            borderColor: 'border.subtle',
+            background: 'surface.subtle',
+            mb: 6,
+            minHeight: 200,
           }}
         >
-          Step {steps[activeStep].step}: {steps[activeStep].title}
-        </Typography>
-        <StepDetail step={steps[activeStep].step} />
-      </Box>
+          <Typography
+            sx={{
+              fontFamily: MONO,
+              fontWeight: 700,
+              fontSize: '1.1rem',
+              color: 'text.primary',
+              mb: 3,
+            }}
+          >
+            Step {steps[activeStep].step}: {steps[activeStep].title}
+          </Typography>
+          <StepDetail step={steps[activeStep].step} />
+        </Box>
+      )}
 
       <Box
         sx={{
