@@ -15,6 +15,7 @@ interface DashboardTopContributorsProps {
   contributors: DashboardFeaturedContributor[];
   isLoading?: boolean;
   title?: string;
+  mode?: 'prs' | 'issues';
 }
 
 const getInitials = (name: string) =>
@@ -29,13 +30,15 @@ const DashboardTopContributors: React.FC<DashboardTopContributorsProps> = ({
   contributors,
   isLoading = false,
   title = 'Featured Contributors',
+  mode = 'prs',
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const monoFontFamily = theme.typography.fontFamily;
 
   const openContributor = (githubId: string) => {
-    navigate(`/miners/details?githubId=${encodeURIComponent(githubId)}`, {
+    const modeParam = mode === 'issues' ? '&mode=issues' : '';
+    navigate(`/miners/details?githubId=${encodeURIComponent(githubId)}${modeParam}`, {
       state: { backTo: '/dashboard' },
     });
   };

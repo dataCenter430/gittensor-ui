@@ -87,6 +87,7 @@ const DashboardFeaturePage: React.FC = () => {
               title="Featured Discoverers"
               contributors={featuredDiscoveryContributors}
               isLoading={isLoading}
+              mode="issues"
             />
           </Box>
 
