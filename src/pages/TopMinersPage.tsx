@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useMediaQuery, Box, Typography, alpha } from '@mui/material';
 import { Page } from '../components/layout';
 import {
@@ -24,6 +24,12 @@ const TopMinersPage: React.FC = () => {
     () =>
       Array.isArray(allMinersStats) ? mapAllMinersToStats(allMinersStats) : [],
     [allMinersStats],
+  );
+
+  const [filteredMiners, setFilteredMiners] = useState(minerStats);
+  const handleFilteredMinersChange = useCallback(
+    (miners: typeof minerStats) => setFilteredMiners(miners),
+    [],
   );
 
   // Dashboard-like responsive logic
@@ -85,6 +91,7 @@ const TopMinersPage: React.FC = () => {
               isLoading={isLoadingMinerStats}
               getMinerHref={getMinerHref}
               linkState={MINER_LINK_STATE}
+              onFilteredMinersChange={handleFilteredMinersChange}
             />
           </Box>
         </Box>
@@ -103,7 +110,7 @@ const TopMinersPage: React.FC = () => {
         >
           {/* Render extracted Sidebar Content here */}
           <LeaderboardSidebar
-            miners={minerStats}
+            miners={filteredMiners}
             getMinerHref={getMinerHref}
             linkState={MINER_LINK_STATE}
           />

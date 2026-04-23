@@ -29,7 +29,6 @@ export const LeaderboardSidebar: React.FC<LeaderboardSidebarProps> = ({
     'earners',
   );
 
-  // Stats (Use original unfiltered list for stats)
   const topEarners = useMemo(
     () =>
       [...miners]

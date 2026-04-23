@@ -62,6 +62,7 @@ interface TopMinersTableProps {
   linkState?: Record<string, unknown>;
   variant?: LeaderboardVariant;
   showDualEligibilityBadges?: boolean;
+  onFilteredMinersChange?: (miners: MinerStats[]) => void;
 }
 
 const getAllowedSortOptions = (variant: LeaderboardVariant): SortOption[] => {
@@ -108,6 +109,7 @@ const TopMinersTable: React.FC<TopMinersTableProps> = ({
   linkState,
   variant = 'oss',
   showDualEligibilityBadges = false,
+  onFilteredMinersChange,
 }) => {
   const allowedSortKeys = useMemo(
     () => getAllowedSortOptions(variant),
@@ -233,6 +235,10 @@ const TopMinersTable: React.FC<TopMinersTableProps> = ({
 
     return result;
   }, [rankedMiners, searchQuery, eligibilityFilter]);
+
+  useEffect(() => {
+    onFilteredMinersChange?.(filteredMiners);
+  }, [filteredMiners, onFilteredMinersChange]);
 
   useEffect(() => {
     if (visibleCount <= filteredMiners.length) return;
